@@ -1,0 +1,129 @@
+ <!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="__PUBLIC__/app/css/mui.min.css">
+		<!--App自定义的css-->
+		<style>
+			.mui-btn {
+				font-size: 16px;
+				margin: 1px;
+				padding: 8px;
+				border-radius: 0px
+			}
+			.ui-alert {
+				text-align: center;
+				padding:10px;
+				font-size: 16px;
+			}
+			#showp{
+			width:100px;
+			height:30px;
+			line-height:18px; 	
+			border-radius:30px;
+			margin-right:10px;
+			float:right
+			}
+			#fir{
+				float: left;
+				font-size: 8px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">确认支付</h1>
+		</header>
+		<!-- <nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item" href="/Phone/user/show_home">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-list"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a class="mui-tab-item mui-active" href="/Phone/user/show_shopping">
+				<span class="mui-icon mui-icon-starhalf"></span>
+				<span class="mui-tab-label">购物车</span>
+			</a>
+			<a class="mui-tab-item" href="/Phone/user/show_setting">
+				<span class="mui-icon mui-icon-gear"></span>
+				<span class="mui-tab-label">设置</span>
+			</a>
+		</nav> -->
+		<include file="Public::nav"/>
+		<div class="mui-content"><br/>
+			<foreach name="result" item="vo">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media">
+						<div id="fir">
+							<img src="__PUBLIC__/app/{$vo.goods_img}" width="40px" height="40px" style="margin-top:10px;margin-left:5px">
+						</div>
+						<div class="mui-media-body" id="fir" style="margin-left:5px;">
+								<span>{$vo.goods_name}</span>
+							<p class='mui-ellipsis'>价格:<b style="color:red;">{$vo.shop_price}</b></p>
+						</div>
+					</li>
+				</ul>
+			</foreach>
+			<div class="mui-table-view mui-table-view-chevron" style="height:60px;font-size:14px"><b>地址</b>
+			<div>
+				<p>收货地址:{$data['address']}</p>
+			</div>
+			</div>
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;font-size:14px"><b>配送方式</b>
+			<div>
+				<p>{$data['shopping_type']}</p>
+			</div>
+			</div>
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;font-size:14px"><b>支付方式</b>
+			<div>
+				<p>{$data['pay_type']}</p>
+			</div>
+			</div>
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;font-size:14px"><b>备注</b>
+			<div>
+				<p>{$data['postscript']}</p>
+			</div>
+			</div>
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;padding:5px;line-height:30px;font-size:14px"><b>商品金额</b>
+			<div class="mui-btn mui-btn-primary" id="showp">
+			<input type="hidden" name="goods_amount" id="goods_amount" value="{$data['goods_amount']}">
+				￥&nbsp;{$data['goods_amount']}
+			</div>
+			</div>
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;padding:5px;line-height:30px;font-size:14px"><b>运费</b>
+			<div class="mui-btn mui-btn-success" id="showp">
+			<input type="hidden" name="shipping_fee" value="{$data['shipping_fee']}">
+				￥&nbsp;{$data['shipping_fee']}
+			</div>
+			</div>	
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;padding:5px;line-height:30px;font-size:14px"><b>商品数量</b>
+			<div class="mui-btn mui-badge-royal" id="showp">
+			<input type="hidden" name="goods_num" value="{$tnum}">
+			{$data['goods_num']}
+			</div>
+			</div>
+			<div class="mui-table-view mui-table-view-chevron" style="height:40px;padding:5px;line-height:30px;font-size:14px"><b>支付金额</b>
+			<div class="mui-btn mui-btn-primary" id="showp">
+			<input type="hidden" name="goods_amount" value="{$data['total']}" id="goods_amount">
+				￥&nbsp;{$data['total']}
+			</div>
+			</div>
+			<div>
+				<button type="submit" class="mui-btn mui-btn-danger mui-btn-block" style="margin-top:10px">确认支付</button>
+			</div>
+		</div>
+		<script src="__PUBLIC__/app/js/mui.min.js"></script>
+		
+		
+	</body>
+
+</html>

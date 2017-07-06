@@ -1,0 +1,26 @@
+		<link rel="stylesheet" href="__static__/home/css/iconfont.css">
+		<nav class="mui-bar mui-bar-tab">
+			<a id="defaultTab" class="mui-tab-item" href="{:url('Index/index')}">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a id="defaultTab2" class="mui-tab-item" href="{:url('Classify/classify')}">
+				<span class="mui-icon iconfont icon-fenlei"></span>
+				<span class="mui-tab-label">分类</span>
+			</a>
+			<a id="defaultTab3" class="mui-tab-item" href="">
+				<span class="mui-icon iconfont icon-gouwuche"><span class="mui-badge">9</span></span>
+				<span class="mui-tab-label">购物车</span>
+			</a>
+			<a id="defaultTab4" class="mui-tab-item" href="{:url('User/index')}">
+				<span class="mui-icon mui-icon-person"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+		</nav>
+		<script src="__static__/home/js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			
+			
+			mui('body').on('tap','a',function(){document.location.href=this.href;});
+		</script>
+

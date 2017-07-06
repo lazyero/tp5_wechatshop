@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="__PUBLIC__/app/css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/app/css/app.css"/>
+		<style>
+		#fir{
+			float: left;
+			font-size: 8px;
+		}
+		#sec{
+			margin-top: 15px;
+			margin-right: -50px;
+			float: right;
+		}
+		#showp{
+			width:100px;
+			height:30px;
+			line-height:18px;
+			margin-top:5px;
+			border-radius:30px;
+			margin-right:10px;
+			float:right
+		}
+		</style>
+	</head>
+
+	<body>
+		<include file="Public::nav"/>
+		<div class="mui-content">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">购物车</h1>
+				<a class="mui-icon mui-pull-right" style="margin-top:-10px;" onclick="deleSeltedRecords()"><span class="mui-icon mui-icon-trash"></span></a>
+			</header>
+			<form action="{:U('App/Cart/shoppinglist')}" method='post'>			
+			<div style="margin-top:50px">
+				<foreach name="result" item="vo">
+				<input type="hidden" name="uid" value="{$vo.id}">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media">
+						<div id="fir">
+							<input type="checkbox" style="margin-bottom:15px" name="chckBox" value="{$vo.cart_id}" onclick="allprice()" />
+							<img src="__PUBLIC__/app/{$vo.goods_img}" width="40px" height="40px" style="margin-top:10px;margin-left:5px">
+						</div>
+						<div class="mui-media-body" id="fir" style="margin-left:5px;">
+								<span>{$vo.goods_name}</span>
+							<p class='mui-ellipsis'>价格:<b style="color:red;">{$vo.shop_price}元</b></p>
+							<p>小计:<b style="color:red;">{$vo.sprice}元</b></p>
+						</div>
+						<div class="mui-numbox" data-numbox-min='0' id="sec">
+							<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+							<input class="mui-input-numbox" type="number" name="num" id="{$vo.goods_id}" value="{$vo.num}"  onchange="myFunction(id,value)" />
+							<button class="mui-btn mui-btn-numbox-plus" type="button" id="add">+</button>
+						</div>
+					</li>
+				</ul>
+				</foreach>
+			</div>
+			<div style="margin-top:20px">
+			<b style="margin-left:5px;">合计：</b>
+				<div class="mui-table-view mui-table-view-chevron" style="height:50px; margin-top:5px;">
+				<div class="mui-btn mui-btn-primary" id="showp" >
+				</div>
+					<input type="hidden" name="all_price" id="all_price" value="" >
+				
+				</div>
+				<button type="submit" class="mui-btn mui-btn-danger mui-btn-block" style="margin-top:10px">去结算</button>
+			</div>
+		</div>
+		</form>
+	</body>
+	<script src="__PUBLIC__/app/js/mui.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		var slider = mui("#slider");
+				slider.slider({
+					interval: 3000
+				});
+		function deleSeltedRecords(){  
+        var chckBox = document.getElementsByName("chckBox");  
+        var num = chckBox.length;  
+        var ids = "";  
+        for(var index =0 ; index<num ; index++){  
+            if(chckBox[index].checked){  
+                ids += chckBox[index].value + " ";                
+            }  
+        }
+        if(ids!=""){
+        
+        mui.confirm('确定删除所选记录？', function(e) {
+					if (e.index == 1) {
+						mui.ajax({  
+		                    type : "post",  
+		                    url : "{:U('App/Cart/delete')}", //要自行删除的action  
+		                    data: 'id='+ids,
+		                    success : function(res) {  
+		                        mui.alert("删除成功");  
+		                        window.location.href = "{:U('App/Cart/show_shopping')}" ;  
+		                    },  
+		                    error : function(res) {  
+		                        alert("系统错误，删除失败");  
+		                    }  
+		                });  
+					}else{
+						 mui.alert("请选择要删除的记录");  
+					}
+				});
+    	}
+    	}
+
+
+	    function myFunction(id,value){
+	    	var gid=id;
+	    	var num=value;
+	    	// console.log(num);
+	    	// mui.alert('请稍候...');
+		    	mui.ajax({
+		    		type:'post',
+		    		url:"{:U('App/Cart/shoppingcart')}",
+		    		data:{
+		    			gid:gid,
+		    			num:num
+		    		},
+		    		success:function(){
+		    			window.location.href="{:U('App/Cart/show_shopping')}";
+		    		}
+		    	})
+	    }
+
+
+	    function allprice(){
+	    	var chckBox = document.getElementsByName("chckBox");  
+        	var num = chckBox.length;  
+        	var ids = "";  
+        	for(var index =0 ; index<num ; index++){  
+            if(chckBox[index].checked){  
+                ids += chckBox[index].value + " ";                
+            }  
+        }
+    			// alert(ids);
+				 	mui.ajax({  
+		                    type : "get",  
+		                    url : "{:U('App/Cart/all_price')}",
+		                    data: 'ids='+ids,
+		                    success : function(res) {	   
+		                    var allprice=document.getElementById('showp');
+		                    var all_price=document.getElementById('all_price');
+		                    allprice.innerText=res;
+		                    all_price.value=res;
+
+		                        // window.location.href = "/app/cart/show_shopping" ;  
+		                    },  
+		                  
+		                });  
+					
+			
+    	
+	    }
+	</script>
+</html>

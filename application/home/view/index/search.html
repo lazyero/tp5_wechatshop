@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="__PUBLIC__/app/css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/app/css/app.css"/>
+		<style>
+			
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			
+			.oa-contact-cell.mui-table .mui-table-cell {
+				padding: 11px 0;
+				vertical-align: middle;
+			}
+			
+			.oa-contact-cell {
+				position: relative;
+				margin: -11px 0;
+			}
+	
+			.oa-contact-avatar {
+				width: 75px;
+			}
+			.oa-contact-avatar img {
+				border-radius: 50%;
+			}
+			.oa-contact-content {
+				width: 100%;
+			}
+			.oa-contact-name {
+				margin-right: 20px;
+			}
+			.oa-contact-name, oa-contact-position {
+				float: left;
+			}
+			.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body{
+				font-size:8px;
+				margin-top:8px;
+				color: #333;
+			}
+		</style>
+	</head>
+
+	<body>
+		<include file="Public::nav"/>
+		<div class="mui-content">
+			<div id="tabbar" class="mui-control-content mui-active">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					<h1 class="mui-title">首页</h1>
+					<form action="{:U('App/Home/search')}" method="post">
+					<div class="mui-input-row mui-search" style="margin-top:50px">
+						<input type="search" name="goods_name" class="mui-input-clear" style="width:88%; float:left">
+						<input type="submit" value="搜索" class="mui-btn mui-btn-outlined"  style="width:12%; height:25px; line-height:5px; float:left" /> 
+					</div>
+					</form>
+				</header>
+			</div>
+				<div style="background-color:#fff">
+				    <ul class="mui-table-view mui-grid-view">
+				    <foreach name="result" item="vo">
+				        <li class="mui-table-view-cell mui-media mui-col-xs-6">
+				            <a href="{:U('App/Home/show_second',array('gid'=>$vo['goods_id']))}">
+				                <img class="mui-media-object" src="__PUBLIC__/app/{$vo.goods_img}">
+				                <div class="mui-media-body" style="font:16px '微软雅黑';height:40px">{$vo.goods_name}<br/>
+				                <b style="color:red;">￥{$vo.shop_price}</b></div></a></li>
+				    </foreach>
+				    </ul>    
+				</div>
+			</div>
+	</body>
+	<script src="__PUBLIC__/app/js/mui.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		var slider = mui("#slider");
+				slider.slider({
+					interval: 3000
+				});
+	</script>
+</html>

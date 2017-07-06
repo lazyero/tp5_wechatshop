@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="__static__/home/css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="__static__/home/css/app.css" />
+	</head>
+	<body>
+	
+	{foreach name="result" item="vo"}
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">{$vo.goods_name}</h1>
+		</header>
+		<div class="mui-content">
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/>
+							<p class="mui-slider-title">{$vo.goods_name}</p>
+						</a>
+					</div>
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/>
+							<p class="mui-slider-title">{$vo.goods_name}</p>
+						</a>
+					</div>
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/>
+							<p class="mui-slider-title">{$vo.goods_name}</p>
+						</a>
+					</div>
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/>
+							<p class="mui-slider-title">{$vo.goods_name}</p>
+						</a>
+					</div>
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/>
+							<p class="mui-slider-title">{$vo.goods_name}</p>
+						</a>
+					</div>
+					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/>
+							<p class="mui-slider-title">{$vo.goods_name}</p>
+						</a>
+					</div>
+				</div>
+					<div class="mui-slider-indicator mui-text-right">
+						<div class="mui-indicator mui-active"></div>
+						<div class="mui-indicator"></div>
+						<div class="mui-indicator"></div>
+						<div class="mui-indicator"></div>
+					</div>
+			</div>
+			 <div class="mui-media-body" style="margin-top:5px">{$vo.goods_name}<br/><b style="color:red;margin-left:5px;">￥&nbsp;{$vo.shop_price}</b></div><br/>
+			 <form action="{:url('App/Cart/shopping_cart')}" method="post">
+			 <input type="hidden" name="gid" value="{$vo.goods_id}">
+			 <span>购买数量:</span>
+			 <div class="mui-numbox" data-numbox-min='0'>
+				<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+				<input class="mui-input-numbox" type="number" name="num" />
+				<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+			</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button type="submit" class="mui-btn mui-btn-danger" style="width:120px;">加入购物车</button>
+			</form>
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item" href="#item1">
+						图文详情
+					</a>
+					<a class="mui-control-item" href="#item2">
+						商品属性
+					</a>
+					<a class="mui-control-item" href="#item3">
+						商品评价
+					</a>
+				</div>
+			</div>
+			<div style="padding: 10px 10px;">
+			<div>
+				<div id="item1" class="mui-control-content">
+					<div>
+						<img src="__static__/home/{$vo.goods_img}" alt="" width="100%"/><br/>
+						<span>{$vo.goods_desc}</span>
+					</div>	
+				</div>
+				<div id="item2" class="mui-control-content">
+					<table>
+						<tr><td  width="100px">商品ID:</td><td>{$vo.goods_id}&nbsp;</td></tr>
+						<tr><td>商品名称:</td><td>{$vo.goods_name}</td></tr>
+						<tr><td>商品编码:</td><td>{$vo.goods_sn}&nbsp;</td></tr>
+						<tr><td>商品货号:</td><td>{$vo.cat_id}</td></tr>
+						<tr><td>商品价格:</td><td>{$vo.shop_price}&nbsp;</td></tr>
+						<tr><td>上架情况:</td><td>{$vo.is_on_sale}</td></tr>
+						<tr><td>库存数量:</td><td>{$vo.goods_number}&nbsp;</td></tr>
+					</table>
+				</div>
+				<div id="item3" class="mui-control-content">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							消灭零评论
+							只买不用
+						</li>
+						<li class="mui-table-view-cell">
+							我就看看
+						</li>
+						<li class="mui-table-view-cell">
+							只买不用
+						</li>
+					</ul>
+				</div>
+			</div>
+			</div>
+			{/foreach}
+	{include file="public/nav" /}
+	</body>
+	<script src="__static__/home/js/mui.min.js"></script>
+	<script type="text/javascript">
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+			var slider = mui("#slider");
+				slider.slider({
+					interval: 3000
+			});
+	</script>
+	

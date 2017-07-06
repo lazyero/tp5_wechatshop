@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>分类</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="__static__/home/css/mui.min.css">
+		<!-- <link rel="stylesheet" type="text/css" href="__PUBLIC__/mu/i/css/app.css" /> -->
+		<style>
+			.mui-row.mui-fullscreen>[class*="mui-col-"] {
+				height: 100%;
+			}
+			.mui-col-xs-3,
+			.mui-control-content {
+				overflow-y: auto;
+				height: 100%;
+			}
+			.mui-segmented-control .mui-control-item {
+				line-height: 50px;
+				width: 100%;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				background-color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">商品分类</h1>
+		</header>
+	
+		
+		<!-- 一级目录 -->
+		<div class="mui-content mui-row mui-fullscreen">
+			<div class="mui-col-xs-5">
+				<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+				{volist name="list" id="vo" key="k"}
+					<a href="#content{$k}" {if condition="$k eq 1"}class="mui-control-item mui-active"{else/}class="mui-control-item"{/if}>{$vo.cat_name}</a>
+				{/volist}
+				</div>
+			</div>
+			<!-- 二级目录 -->
+			<div id="segmentedControls" class="mui-col-xs-7" style="border-left: 1px solid #c8c7cc;">
+				{volist name="list" id="vo" key="k"}
+					<div id="content{$k}" {if condition="$k eq 1"}class="mui-control-content mui-active"{else/}class="mui-control-content"{/if}>
+						<ul class="mui-table-view">
+							{volist name="vo.child" id="child" key="k1"}
+								<li class="mui-table-view-cell">
+									<a href="{:url('Classify/classify_second')}?cid={$child.cat_id}">{$child.cat_name}</a>	
+								</li>
+							{/volist}
+						</ul>
+					</div>
+				{/volist}
+			</div>
+
+		{include file="public/nav" /}
+		<script src="__static__/home/js/mui.min.js"></script>
+	</body>
+</html>
