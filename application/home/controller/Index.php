@@ -6,30 +6,23 @@ class Index extends Controller {
 	{	
 		$product=model("product");
 		$banner=model("banner");
-		$user=model("user");
 		//微信授权获取用户信息
-		$wechat=new WeChat();
-        $arr=$wechat->getUser();
-      
-       
-        session("nickname",$arr['nickname']);
-        session("sex",$arr['sex']);
-        session("headimgurl",$arr['headimgurl']);
-        session("openid",$arr['openid']);
-       
-    	//更新数据库用户信息
-        $result=$user->save_user($arr);
-        if($result){
-        	$product_list=$product->get_product_list();
-			$banner_list=$banner->get_banner_list();
-			$this->assign('product_list',$product_list);
-			$this->assign('banner_list',$banner_list);
-			return $this->fetch();
-        }else{
-        	 $this->error('获取用户信息失败！');
-        }
-
-		
+		if(!session("openid")){
+			$user=model("user");
+			$wechat=new WeChat();
+        	$arr=$wechat->getUser();
+        	session("nickname",$arr['nickname']);
+        	session("sex",$arr['sex']);
+        	session("headimgurl",$arr['headimgurl']);
+        	session("openid",$arr['openid']);
+        	//更新数据库用户信息
+       		$user->save_user($arr);
+    	}
+        $product_list=$product->get_product_list();
+		$banner_list=$banner->get_banner_list();
+		$this->assign('product_list',$product_list);
+		$this->assign('banner_list',$banner_list);	
+		return $this->fetch();	
 	}
 	public function second()
 	{
