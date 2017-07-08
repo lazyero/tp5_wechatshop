@@ -35,4 +35,10 @@ class User extends Model{
 		$result=$this->where('openid',$openid)->select();
 		return $result;
 	}
+
+	public function update_address($openid,$data)
+	{
+		$result=$this->where('openid',$openid)->update($data);
+		return $result;
+	}
 }

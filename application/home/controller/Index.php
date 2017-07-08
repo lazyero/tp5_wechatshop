@@ -6,7 +6,7 @@ class Index extends Controller {
 	{	
 		$product=model("product");
 		$banner=model("banner");
-		//微信授权获取用户信息
+		// 微信授权获取用户信息
 		if(!session("openid")){
 			$user=model("user");
 			$wechat=new WeChat();
