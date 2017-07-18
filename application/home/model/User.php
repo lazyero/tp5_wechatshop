@@ -5,12 +5,12 @@ use think\Model;
 * 
 */
 class User extends Model{
-	public function get_user_list()
+	public function getUserList()
 	{
 		$result=$this->select();
 		return $result;
 	}
-	public function save_user($arr)
+	public function saveUser($arr)
 	{	
 
 		$data['nickname']=$arr['nickname'];
@@ -36,7 +36,7 @@ class User extends Model{
 		return $result;
 	}
 
-	public function update_address($openid,$data)
+	public function updateAddress($openid,$data)
 	{
 		$result=$this->where('openid',$openid)->update($data);
 		return $result;

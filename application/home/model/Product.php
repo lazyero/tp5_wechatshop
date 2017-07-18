@@ -5,14 +5,15 @@ use think\Model;
 * 
 */
 class Product extends Model{
-	public function get_product_list()
+	public function getProductList()
 	{
 		$result=$this->select();
 		return $result;
 	}
-	public function get_product($id)
+	public function getProduct($goods_id)
 	{
-		$result=$this->where('goods_id',$id)->select();
+		$result=$this->where('goods_id',$goods_id)->select();
 		return $result;
 	}
+	
 }

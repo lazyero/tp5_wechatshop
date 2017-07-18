@@ -5,10 +5,9 @@ use think\Model;
 * 
 */
 class Banner extends Model{
-	public function get_banner_list()
+	public function getBannerlist()
 	{
 		$result=$this->select();
 		return $result;
 	}
-
 }

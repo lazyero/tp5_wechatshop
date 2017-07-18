@@ -1,135 +1,63 @@
 <?php
-namespace App\Controller;
-use Think\Controller;
-class CartController extends Controller {
+namespace app\home\controller;
+use think\Controller;
+use think\Db;
+class Cart extends Controller {
 
-    public function show_shopping(){
-        if(session('name')){
-            $name=session('name');
-            $product=M('product');
-            $cart=M('cart');
-            $result=$product->join('cart on product.goods_id=cart.goods_id')->where(" cart.name='$name'")->select();
-            $total=$cart->where("name='$name'")->sum('sprice');
-            $count=$cart->where("name='$name'")->count();
-            $this->assign('count',$count);
-            $this->assign('total',$total);  
-            $this->assign('result',$result);
-            $this->display('shopping_cart');
-
-        }else{
-            $this->display('/app/login');
+    public function list_cart()
+    {
+        $openid=session("openid");
+        $cartlist=Db::table('product')
+                    ->alias('p')
+                    ->join('cart c','p.goods_id = c.goods_id')
+                    ->order('c.cart_id desc')
+                    ->select();
+        $this->assign('cartlist',$cartlist);
+        return $this->fetch();
+    }
+    public function add_cart(){
+        $data['goods_id']=input('post.gid');
+        $data['num']=input('post.num');
+        $data['openid']=session('openid');
+        $cart=model('cart');
+        $result=$cart->addCart($data);
+        if ($result) {
+             $this->redirect("Cart/list_cart");
         }
     }
-
-    public function shopping_cart(){
-       
-        if(session('name')){
-        $data['goods_id']=I('post.gid');
-        $goods_id=I('post.gid');
-        $data['num']=I('post.num');
-        $data['name']=session('name');
-        $name=session('name');
-        $product=M('product');
-        $price=$product->where("goods_id='$goods_id'")->getField('shop_price');
-       
-        // var_dump($data['sprice']);exit;
-        $cart=M('cart');
-        $result_num=$cart->where("goods_id='$goods_id' and name='$name' ")->getField('num');
-        if($result_num){
-            $data['num']=$data['num']+$result_num;
-            $data['sprice']=$data['num']*$price;
-            // var_dump($data['num']);exit;
-            $res=$cart->where("goods_id='$goods_id' and name='$name'")->save($data);
-        }else{
-            $data['sprice']=$data['num']*$price;
-            $res=$cart->add($data);
-        }
-       
-        if($res){
-
-        $result=$product->join('cart on product.goods_id=cart.goods_id')->where(" cart.name='$name'")->select();
-        // var_dump($result);exit;
-       $total=$cart->where("name='$name'")->sum('sprice');
-        $count=$cart->where("name='$name'")->count();
-        session('count',$count);
-        $this->assign('count',session('count'));
-        $this->assign('total',$total);        
-        $this->assign('result',$result);
-        $this->display('shopping_cart');
-        }else{
-            $this->display('/app/login');
-        }
-    }else{
-        $this->display('/app/login');
-    }     
+    public function deleteCart(){
+        $cart_ids=I('post.ids');
+        $cart=model("cart");
+        $cart_id_array=array_filter(explode(';',$cart_ids));
+        $result=$cart->deleteCart($cart_id_array);
+        echo $result;
     }
-
-    public function shoppingcart(){
-        $name=session('name');
-        $goods_id=I('post.gid');
-        $data['num']=I('post.num');
-        $product=M('product');
-        $price=$product->where("goods_id='$goods_id'")->getField('shop_price');
-        $data['sprice']=$data['num']*$price;
-        $cart=M('cart');
-        
-        $res=$cart->where("goods_id='$goods_id' and name='$name'")->save($data);
+    public function sumOne()
+    {   
+        $cart_id=input("post.cart_id");
+        $goods_id=input("post.goods_id");
+        $num=input("post.num");
+        $cart=model("cart");
+        $product=model("product");
+        $cart->updateNum($cart_id,$num);
+        $result=$product->getProduct($goods_id);
+        echo $result[0]['shop_price'];
     }
-    public function delete(){
-        $cart_id=I('post.id');
-        // var_dump($cart_id);exit;
-        $cart=M('cart');
-        $id=explode(" ",$cart_id);
-        foreach ($id as $value) {
-         $result=$cart->where("cart_id='$value'")->delete();
+    public function sumAll(){
+        $cart_ids=input('post.ids');
+        $cart=model("cart");
+        $product=model("product");
+        $cart_id_array=array_filter(explode(';',$cart_ids));
+
+
+        for ($i=0; $i <count($cart_id_array); $i++) {           
+            $cart_array[]=$cart->getUserCart($cart_id_array[$i]);
+            $product_array=$product->getProduct($cart_array[$i]['goods_id']);
+            $shop_price=$product_array[0]['shop_price'];
+            $sum[]=$cart_array[$i]['num']*$shop_price;
         }
-
-       
-    }
-    public function all_price(){
-        $cart_id=I('get.ids');
-
-        // var_dump($cart_id);
-        session('cart_id',$cart_id);
-
-        $cart=M('cart');
-        $id=explode(" ",$cart_id);
-        
-
-        // var_dump($id);exit;
-        // $ids['cart_id']=array('in',$id);
-        for ($i=0; $i <count($id) ; $i++) { 
-           
-            $res[$i]=$cart->where("cart_id='$id[$i]'")->sum('sprice');
-        }
-
-        $res=array_sum($res);
-        // var_dump($res);
-        // echo($res);
-
-        echo  $res;
-
-    }
-    public function shoppinglist(){
-        $all_price=I('post.all_price');
-        // var_dump($all_price);exit;
-        $name=session('name');
-        $address=M('address');
-        $product=M('product');
-        $cart=M('cart');
-        $cart_id=session('cart_id');  
-        $cart_ids=explode(" ",$cart_id);
-        $id['cart_id']=array('in',$cart_ids);
-        $result=$product->join('cart on product.goods_id=cart.goods_id')->where($id)->select();
-
-        $number=$cart->where($id)->sum('num');
-        // var_dump($number);exit;
-        $result_address=$address->where("name='$name'")->select();
-        $this->assign('all_price',$all_price);
-        $this->assign('result',$result);
-        $this->assign('number',$number);
-        $this->assign('result_address',$result_address);
-        $this->display('pay');
+        $res=array_sum($sum);
+        echo  json_encode($res);
     }
 
     public function confirm(){

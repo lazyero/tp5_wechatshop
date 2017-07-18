@@ -8,9 +8,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<!--标准mui.css-->
-		<link rel="stylesheet" href="__PUBLIC__/app/css/mui.min.css">
+		<link rel="stylesheet" href="__static__/home/css/mui.min.css">
 		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="__PUBLIC__/app/css/app.css"/>
+		<link rel="stylesheet" type="text/css" href="__static__/home/css/app.css"/>
 		<style>
 		#fir{
 			float: left;
@@ -34,41 +34,43 @@
 	</head>
 
 	<body>
-		<include file="Public::nav"/>
+		
 		<div class="mui-content">
 			<header class="mui-bar mui-bar-nav">
 				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 				<h1 class="mui-title">购物车</h1>
 				<a class="mui-icon mui-pull-right" style="margin-top:-10px;" onclick="deleSeltedRecords()"><span class="mui-icon mui-icon-trash"></span></a>
 			</header>
-			<form action="{:U('App/Cart/shoppinglist')}" method='post'>			
+			<form action="{:url('Cart/shoppinglist')}" method='post'>			
 			<div style="margin-top:50px">
-				<foreach name="result" item="vo">
-				<input type="hidden" name="uid" value="{$vo.id}">
-				<ul class="mui-table-view mui-table-view-chevron">
-					<li class="mui-table-view-cell mui-media">
+				
+				<ul class="mui-table-view mui-table-view-chevron" >
+				{foreach name="cartlist" item="vo"}
+					<li class="mui-table-view-cell mui-media" id="cart{$vo.cart_id}">
 						<div id="fir">
 							<input type="checkbox" style="margin-bottom:15px" name="chckBox" value="{$vo.cart_id}" onclick="allprice()" />
-							<img src="__PUBLIC__/app/{$vo.goods_img}" width="40px" height="40px" style="margin-top:10px;margin-left:5px">
+							<img src="__static__/home/{$vo.goods_img}" width="40px" height="40px" style="margin-top:10px;margin-left:5px">
 						</div>
 						<div class="mui-media-body" id="fir" style="margin-left:5px;">
 								<span>{$vo.goods_name}</span>
 							<p class='mui-ellipsis'>价格:<b style="color:red;">{$vo.shop_price}元</b></p>
-							<p>小计:<b style="color:red;">{$vo.sprice}元</b></p>
+							<p>小计:<b style="color:red;"><span id="sumone{$vo.cart_id}">{$vo.shop_price*$vo.num}</span>元</b></p>
 						</div>
 						<div class="mui-numbox" data-numbox-min='0' id="sec">
 							<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
-							<input class="mui-input-numbox" type="number" name="num" id="{$vo.goods_id}" value="{$vo.num}"  onchange="myFunction(id,value)" />
+							<input class="mui-input-numbox" type="number" name="num" id="{$vo.cart_id}" value="{$vo.num}" data-id="{$vo.goods_id}" onchange="myFunction(id,value,{$vo.goods_id})" />
 							<button class="mui-btn mui-btn-numbox-plus" type="button" id="add">+</button>
 						</div>
 					</li>
+				{/foreach}
 				</ul>
-				</foreach>
+				
 			</div>
 			<div style="margin-top:20px">
 			<b style="margin-left:5px;">合计：</b>
 				<div class="mui-table-view mui-table-view-chevron" style="height:50px; margin-top:5px;">
 				<div class="mui-btn mui-btn-primary" id="showp" >
+
 				</div>
 					<input type="hidden" name="all_price" id="all_price" value="" >
 				
@@ -77,8 +79,11 @@
 			</div>
 		</div>
 		</form>
+
+	{include file="public/nav"/}
+	<div style="height: 100px"></div>
 	</body>
-	<script src="__PUBLIC__/app/js/mui.min.js"></script>
+	<script src="__static__/home/js/mui.min.js"></script>
 	<script>
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
@@ -93,7 +98,7 @@
         var ids = "";  
         for(var index =0 ; index<num ; index++){  
             if(chckBox[index].checked){  
-                ids += chckBox[index].value + " ";                
+                ids += chckBox[index].value + ";";                
             }  
         }
         if(ids!=""){
@@ -102,11 +107,16 @@
 					if (e.index == 1) {
 						mui.ajax({  
 		                    type : "post",  
-		                    url : "{:U('App/Cart/delete')}", //要自行删除的action  
-		                    data: 'id='+ids,
-		                    success : function(res) {  
-		                        mui.alert("删除成功");  
-		                        window.location.href = "{:U('App/Cart/show_shopping')}" ;  
+		                    url : "{:url('Cart/deleteCart')}", //要自行删除的action  
+		                    data: 'ids='+ids,
+		                    success : function(res) {
+		                    if (res) {
+		                    	mui.alert("删除成功");
+		                        for (var i = ids.length - 1; i >= 0; i--) {
+		                        	document.getElementById("cart"+ids[i]).remove();
+		                        }
+		                    }  
+		                        
 		                    },  
 		                    error : function(res) {  
 		                        alert("系统错误，删除失败");  
@@ -120,24 +130,24 @@
     	}
 
 
-	    function myFunction(id,value){
-	    	var gid=id;
-	    	var num=value;
-	    	// console.log(num);
-	    	// mui.alert('请稍候...');
+	    function myFunction(id,value,data){
+	    	
 		    	mui.ajax({
 		    		type:'post',
-		    		url:"{:U('App/Cart/shoppingcart')}",
+		    		url:"{:url('home/Cart/sumOne')}",
 		    		data:{
-		    			gid:gid,
-		    			num:num
+		    			'cart_id':id,
+		    			'num':value,
+		    			'goods_id':data,
 		    		},
-		    		success:function(){
-		    			window.location.href="{:U('App/Cart/show_shopping')}";
+		    		success:function(res){
+		    			var sumone=res*value;
+		    			document.getElementById('sumone'+id).innerText=sumone;
+		    			
+		    			
 		    		}
 		    	})
 	    }
-
 
 	    function allprice(){
 	    	var chckBox = document.getElementsByName("chckBox");  
@@ -145,21 +155,19 @@
         	var ids = "";  
         	for(var index =0 ; index<num ; index++){  
             if(chckBox[index].checked){  
-                ids += chckBox[index].value + " ";                
+                ids += chckBox[index].value + ";";                
             }  
         }
-    			// alert(ids);
+    			
 				 	mui.ajax({  
-		                    type : "get",  
-		                    url : "{:U('App/Cart/all_price')}",
+		                    type : "post",  
+		                    url : "{:url('Cart/sumAll')}",
 		                    data: 'ids='+ids,
-		                    success : function(res) {	   
-		                    var allprice=document.getElementById('showp');
-		                    var all_price=document.getElementById('all_price');
-		                    allprice.innerText=res;
-		                    all_price.value=res;
-
-		                        // window.location.href = "/app/cart/show_shopping" ;  
+		                    success : function(res) {
+		                    console.log(res);	 
+		                      
+		                    	document.getElementById('all_price').value=res;
+		                    	document.getElementById('showp').innerText=res;
 		                    },  
 		                  
 		                });  

@@ -4,21 +4,19 @@ use think\Model;
 /**
 * 
 */
-class category extends Model{
-	public function get_category_list()
+class Category extends Model{
+	public function getCategoryList()
 	{
 		$list=$this->select();
 		$tree=$this->tree_list($list);
 		return $tree;
 	}
 
-	public function get_category_second_list($cid)
+	public function getCategorySecondList($cid)
 	{
 		$list=$this->where('parent_id',$cid)->select();
    		return $list;
 	}
-
-
 	//递归
    private function tree_list(&$list,$parent_id=0){
    	$tree=array();
@@ -35,5 +33,4 @@ class category extends Model{
    		return $tree;
    	}
    }
-
 }

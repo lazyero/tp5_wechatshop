@@ -5,12 +5,12 @@ use think\Model;
 * 
 */
 class Useraddress extends Model{
-	public function get_user_list()
+	public function getUserList()
 	{
 		$result=$this->select();
 		return $result;
 	}
-	public function save_user_address($openid,$data)
+	public function saveUserAddress($openid,$data)
 	{	
 
 		
@@ -26,7 +26,7 @@ class Useraddress extends Model{
 		}
 		return $result;
 	}
-	public function get_address($openid)
+	public function getAddress($openid)
 	{	
 		$result=$this->where('openid',$openid)->select();
 		return $result;

@@ -9,10 +9,9 @@ class WeChat extends Controller {
 	*/
 	public function getAccessToken()
 	{
-		
 		$appid=APPID;
 		$secret=SECRET;
-		//access_token暂存地址
+		//access_token暂存地址在和入口文件同级目录下
 		$token_file='access_token.txt';
 		//判断access_token文件是否已经过期，未过期直接返回文件内容
 		$life_time=7200;

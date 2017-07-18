@@ -70,7 +70,7 @@
 					</div>
 			</div>
 			 <div class="mui-media-body" style="margin-top:5px">{$vo.goods_name}<br/><b style="color:red;margin-left:5px;">￥&nbsp;{$vo.shop_price}</b></div><br/>
-			 <form action="{:url('App/Cart/shopping_cart')}" method="post">
+			 <form action="{:url('Cart/add_cart')}" method="post">
 			 <input type="hidden" name="gid" value="{$vo.goods_id}">
 			 <span>购买数量:</span>
 			 <div class="mui-numbox" data-numbox-min='0'>
@@ -130,6 +130,7 @@
 			</div>
 			{/foreach}
 	{include file="public/nav" /}
+	<div style="height: 100px"></div>
 	</body>
 	<script src="__static__/home/js/mui.min.js"></script>
 	<script type="text/javascript">

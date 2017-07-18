@@ -18,18 +18,19 @@ class User extends Controller {
         $data['user_name']=input("post.user_name");
         $data['tel']=input("post.tel");
         $openid=session("openid");
-        $result=$useraddress->save_user_address($openid,$data);
-        
+        $result=$useraddress->saveUserAddress($openid,$data);
+        if ($result) {
+           $this->redirect("User/address");
+        }
 
     }
 
-     
     public function address(){
         $useraddress=model("useraddress");
         $openid=session("openid");
-        $result=$useraddress->get_address($openid);
+        $result=$useraddress->getAddress($openid);
         foreach ($result as $key => $value) {
-            $address=$value['address_city'].$value['address_address']."联系方式：".$value['tel']."收件人：".$value['user_name'];
+            $address="地址：".$value['address_city'].$value['address_address']."    联系方式：".$value['tel']."    收件人：".$value['user_name'];
         }
         $this->assign('address',$address);
         return $this->fetch();

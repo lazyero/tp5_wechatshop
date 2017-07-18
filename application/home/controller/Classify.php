@@ -8,24 +8,21 @@ class Classify extends Controller {
 //一级
    public function classify(){
          $category=model("category");
-         $tree=$category->get_category_list();
+         $tree=$category->getCategoryList();
    		$this->assign('list',$tree);
    		return $this->fetch();
    }
-
-
-
 
 //二级
    public function classify_second(){
    	$cid=$_GET['cid'];
    	$category=model("category");
       $product=model('product');
-      $list=$category->get_category_second_list($cid);
+      $list=$category->getCategorySecondList($cid);
 
    	foreach ($list as   $k=>  &$val) {
    		$cat_id=$val['cat_id'];
-   		$res=$product->get_product($cat_id);
+   		$res=$product->getProduct($cat_id);
    		$val['product']=$res;
    		}
    	$this->assign('cid',$cid);
