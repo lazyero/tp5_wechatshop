@@ -1,5 +1,5 @@
 <?php
-namespace app\admin\model;
+namespace app\common\model;
 use think\Model;
 Class admin extends Model{
 	public function doLogin($name,$password)

@@ -17,7 +17,7 @@ class Login extends Controller
 			if(!captcha_check($captcha)){
 				$this->error('验证码错误！');
 			};
-			if (model('admin')->doLogin($name,$password)) {
+			if (model('Admin')->doLogin($name,$password)) {
 				session('admin_name',$name);
 				$this->success('登陆成功','Index/index');
 			}else{
